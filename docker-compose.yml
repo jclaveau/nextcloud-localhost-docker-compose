@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  nextcloud:
+    build:
+      context: .
+      args:
+        HOST_UID: "${UID:-1000}"
+    restart: always
+    privileged: true # required to run cron jobs
+    # entrypoint: ["/sbin/init"]
+    ports:
+      - 80:80
+      # - 8080:80
+    volumes:
+      - ./nextcloud:/var/www/html
+      - ./data:/var/www/html/data/
+    environment:
+      SQLITE_DATABASE: "nextcloud_local"
+      NEXTCLOUD_TRUSTED_DOMAINS: "nextcloud.localhost ${TRUSTED_DOMAINS:-}"
+      APACHE_RUN_USER: host_user
+      NEXTCLOUD_ADMIN_USER: ${USER}
+      NEXTCLOUD_ADMIN_PASSWORD: ${USER}
+
